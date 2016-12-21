@@ -5,11 +5,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.mdorst.mariobros.util.Constant;
 
 public class Mario extends Sprite {
-    private World world;
     public Body body;
 
     public Mario(World world) {
-        this.world = world;
 
         // Set up Box2D body
         BodyDef bodyDef = new BodyDef();

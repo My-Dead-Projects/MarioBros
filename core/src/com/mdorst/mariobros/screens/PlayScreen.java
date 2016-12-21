@@ -1,6 +1,7 @@
 package com.mdorst.mariobros.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,6 +19,8 @@ import com.mdorst.mariobros.MarioBros;
 import com.mdorst.mariobros.scenes.Hud;
 import com.mdorst.mariobros.sprites.Mario;
 import com.mdorst.mariobros.util.Constant;
+
+import static sun.audio.AudioPlayer.player;
 
 public class PlayScreen implements Screen {
 
@@ -77,12 +80,22 @@ public class PlayScreen implements Screen {
 
     private void update(float deltaTime) {
         // Handle input
-        if (Gdx.input.isTouched()) {
-            camera.position.x += 2 * deltaTime;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            mario.body.applyLinearImpulse(new Vector2(0, Constant.Mario.JUMP_IMPULSE),
+                                          mario.body.getWorldCenter(), true);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mario.body.getLinearVelocity().x <= 2) {
+            mario.body.setLinearVelocity(new Vector2(2, mario.body.getLinearVelocity().y));
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && mario.body.getLinearVelocity().x >= -2) {
+            mario.body.setLinearVelocity(new Vector2(-2, mario.body.getLinearVelocity().y));
         }
 
         // Set Box2d physics poll rate
         world.step(1/60f, 6, 2);
+
+        // Make camera follow mario
+        camera.position.x = mario.body.getPosition().x;
 
         // Finalize
         camera.update();
