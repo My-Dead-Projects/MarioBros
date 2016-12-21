@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mdorst.mariobros.MarioBros;
 import com.mdorst.mariobros.scenes.Hud;
+import com.mdorst.mariobros.sprites.Mario;
 import com.mdorst.mariobros.util.Constant;
 
 public class PlayScreen implements Screen {
@@ -29,6 +30,7 @@ public class PlayScreen implements Screen {
     // Box2D
     private World world;
     private Box2DDebugRenderer debugRenderer;
+    private Mario mario;
 
     public PlayScreen(MarioBros game) {
         this.game = game;
@@ -41,7 +43,7 @@ public class PlayScreen implements Screen {
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         // Initialize Box2D
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, -9.8f), true);
         debugRenderer = new Box2DDebugRenderer();
 
         // Create Box2D objects
@@ -50,7 +52,7 @@ public class PlayScreen implements Screen {
         FixtureDef fixtureDef = new FixtureDef();
         Body body;
 
-        // Iterate over layers
+        // Iterate over layers 2-5, which are the object layers
         for (int i = 2; i <= 5; i++) {
             // Iterate over every collideable surface in the layer
             for (MapObject object : map.getLayers().get(i).getObjects().getByType(RectangleMapObject.class)) {
@@ -65,6 +67,9 @@ public class PlayScreen implements Screen {
                 body.createFixture(fixtureDef);
             }
         }
+
+        // Create Mario
+        mario = new Mario(world);
     }
 
     private void update(float deltaTime) {
@@ -72,6 +77,9 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isTouched()) {
             camera.position.x += 100 * deltaTime;
         }
+
+        // Set Box2d physics poll rate
+        world.step(1/60f, 6, 2);
 
         // Finalize
         camera.update();
