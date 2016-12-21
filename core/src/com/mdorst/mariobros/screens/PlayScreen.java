@@ -35,11 +35,12 @@ public class PlayScreen implements Screen {
     public PlayScreen(MarioBros game) {
         this.game = game;
         camera = new OrthographicCamera();
-        viewport = new FitViewport(Constant.VIEWPORT_WIDTH, Constant.VIEWPORT_HEIGHT, camera);
+        viewport = new FitViewport(Constant.VIEWPORT_WIDTH / Constant.PIXELS_PER_METER,
+                                   Constant.VIEWPORT_HEIGHT / Constant.PIXELS_PER_METER, camera);
         hud = new Hud(game.batch);
         TmxMapLoader mapLoader = new TmxMapLoader();
         TiledMap map = mapLoader.load("level1.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map);
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / Constant.PIXELS_PER_METER);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         // Initialize Box2D
@@ -59,10 +60,12 @@ public class PlayScreen implements Screen {
                 Rectangle rect = ((RectangleMapObject) object).getRectangle();
                 bodyDef.type = BodyDef.BodyType.StaticBody;
                 // Set bodyDef position to center of object
-                bodyDef.position.set(rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() /2);
+                bodyDef.position.set((rect.getX() + rect.getWidth() / 2) / Constant.PIXELS_PER_METER,
+                                     (rect.getY() + rect.getHeight() /2) / Constant.PIXELS_PER_METER);
                 body = world.createBody(bodyDef);
                 // Shape defined by width from center
-                shape.setAsBox(rect.getWidth() / 2, rect.getHeight() / 2);
+                shape.setAsBox(rect.getWidth() / (2 * Constant.PIXELS_PER_METER),
+                               rect.getHeight() / (2 * Constant.PIXELS_PER_METER));
                 fixtureDef.shape = shape;
                 body.createFixture(fixtureDef);
             }
@@ -75,7 +78,7 @@ public class PlayScreen implements Screen {
     private void update(float deltaTime) {
         // Handle input
         if (Gdx.input.isTouched()) {
-            camera.position.x += 100 * deltaTime;
+            camera.position.x += 2 * deltaTime;
         }
 
         // Set Box2d physics poll rate
