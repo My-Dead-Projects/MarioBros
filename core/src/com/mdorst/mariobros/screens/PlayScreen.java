@@ -53,11 +53,11 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
-        // Draw the hud
-        hud.stage.draw();
-
         // Draw the map
         renderer.render();
+
+        // Draw the hud
+        hud.stage.draw();
     }
 
     @Override
