@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mdorst.mariobros.MarioBros;
+import com.mdorst.mariobros.util.Constant;
 
 public class PlayScreen implements Screen {
 
@@ -20,7 +21,7 @@ public class PlayScreen implements Screen {
         this.game = game;
         texture = new Texture("badlogic.jpg");
         camera = new OrthographicCamera();
-        viewport = new FitViewport(800, 400, camera);
+        viewport = new FitViewport(Constant.VIEWPORT_WIDTH, Constant.VIEWPORT_HEIGHT, camera);
     }
 
     @Override
